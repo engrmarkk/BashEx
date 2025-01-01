@@ -25,9 +25,7 @@ Keep showing the menu in a loop until the user chooses to exit.
 Variables:
 
 Use variables to store user inputs like directory paths or file names.
-Environment Variables:
 
-Use an environment variable to store the default directory the script operates in (e.g., $HOME).
 Error Handling:
 
 If a user enters an invalid option or the specified file/directory does not exist, show an appropriate message.
