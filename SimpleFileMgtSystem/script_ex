@@ -1,0 +1,122 @@
+#! /bin/bash
+
+# function to list files in a directory
+list_files() {
+    echo "Listing files"
+    ls -l
+}
+
+search_file() {
+    echo "Enter filename to search"
+    read filename
+    if [ -f $filename ]; then
+        echo "File found"
+    else
+        echo "File not found"
+    fi
+}
+
+create_new_dir() {
+    echo "Enter name of the new directory"
+    read dirname
+
+    if [ -d $dirname ]; then
+        echo "Directory already exists"
+    else
+        mkdir $dirname
+        echo "Directory created"
+    fi
+}
+
+create_new_file() {
+    echo "Enter name of the new file"
+    read filename
+
+    if [ -f $filename ]; then
+        echo "File already exists"
+    else
+        touch $filename
+        echo "File created"
+    fi
+}
+
+change_dir() {
+    echo "Enter the directory to change to"
+    read dir
+    if [ -d $dir ]; then
+        cd $dir
+        echo "Directory changed"
+    else
+        echo "Directory not found"
+    fi
+}
+
+display_file_content() {
+    echo "Enter the file to display"
+    read file
+    if [ -f $file ]; then
+        cat $file
+    else
+        echo "File not found"
+    fi
+}
+
+modify_file_permissions() {
+    echo "Enter the file to modify permissions"
+    read file
+    if [ -f $file ]; then
+        echo "Enter the new permissions"
+        read perm
+        if chmod $perm $file; then
+            echo "Permissions changed"
+        else
+            echo "Failed to change permissions"
+        fi
+        echo "Permissions changed"
+    else
+        echo "File not found"
+    fi
+}
+
+
+# display options
+display_options() {
+    echo "------------------------"
+    echo "File Management System"
+    echo "1. List Directory Contents"
+    echo "2. Search for a File"
+    echo "3. Create a New Directory"
+    echo "4. Change Directory"
+    echo "5. Display File Content"
+    echo "6. Modify File Permissions"
+    echo "7. Create a New File"
+    echo "8. Exit"
+    echo "------------------------"
+    read -p "Choose an option: " choice
+    return $choice
+}
+
+# determine user choice using case statement
+determine_choice(){
+    display_options
+    case $choice in
+        1) list_files;;
+        2) search_file;;
+        3) create_new_dir;;
+        4) change_dir;;
+        5) display_file_content;;
+        6) modify_file_permissions;;
+        7) create_new_file;;
+        8) echo "Exiting...";;
+        *) echo "Invalid choice";;
+    esac
+}
+
+# list_files
+while true; do
+if [ "$choice" != 8 ]; then
+    determine_choice
+else
+    break
+fi
+done
