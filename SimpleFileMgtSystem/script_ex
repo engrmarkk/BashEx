@@ -51,6 +51,28 @@ change_dir() {
     fi
 }
 
+delete_file() {
+    echo "Enter the file to delete"
+    read file
+    if [ -f $file ]; then
+        rm $file
+        echo "File deleted"
+    else
+        echo "File not found"
+    fi
+}
+
+delete_folder() {
+    echo "Enter the folder to delete"
+    read folder
+    if [ -d $folder ]; then
+        rm -rf $folder
+        echo "Folder deleted"
+    else
+        echo "Folder not found"
+    fi
+}
+
 display_file_content() {
     echo "Enter the file to display"
     read file
@@ -90,7 +112,9 @@ display_options() {
     echo "5. Display File Content"
     echo "6. Modify File Permissions"
     echo "7. Create a New File"
-    echo "8. Exit"
+    echo "8. Delete a File"
+    echo "9. Delete a Folder"
+    echo "10. Exit"
     echo "------------------------"
     read -p "Choose an option: " choice
     return $choice
@@ -107,14 +131,16 @@ determine_choice(){
         5) display_file_content;;
         6) modify_file_permissions;;
         7) create_new_file;;
-        8) echo "Exiting...";;
+        8) delete_file;;
+        9) delete_folder;;
+        10) echo "Exiting...";;
         *) echo "Invalid choice";;
     esac
 }
 
 # list_files
 while true; do
-if [ "$choice" != 8 ]; then
+if [ "$choice" != 10 ]; then
     determine_choice
 else
     break
