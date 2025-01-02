@@ -1,0 +1,111 @@
+#! /bin/bash
+
+user_menu() {
+    echo "_________________"
+    echo "1. Add user"
+    echo "2. Delete user"
+    echo "3. Modify user details"
+    echo "4. Add user to group"
+    echo "4. Display user details"
+    echo "5. Exit"
+    echo "_________________"
+}
+
+add_user() {
+    read -p "Enter the username" username
+    read -p "Enter the user's full name" full_name
+    read -p "Enter the user's home directory" home_dir
+    read -p "Enter the user's shell" shell
+    if useradd -c "$full_name" -d "$home_dir" -s "$shell" "$username"; then
+        echo "User added"
+    else
+        echo "Failed to add user"
+    fi
+}
+
+delete_user() {
+    echo "Enter the username to delete"
+    read username
+    if id "$username" &>/dev/null; then
+        userdel "$username"
+        echo "User deleted"
+    else
+        echo "User not found"
+    fi
+}
+
+modify_user_details() {
+    read -p "Enter the username to modify" username
+    if id "$username" &>/dev/null; then
+        read -p "Enter the new full name" full_name
+        read -p "Enter the new home directory" home_dir
+        read -p "Enter the new shell" shell
+        if usermod -c "$full_name" -d "$home_dir" -s "$shell" "$username"; then
+            echo "User details modified"
+        else
+            echo "Failed to modify user details"
+        fi
+    else
+        echo "User not found"
+    fi
+}
+
+display_user_details() {
+    echo "Enter the username to display details"
+    read username
+    if id "$username" &>/dev/null; then
+        finger "$username"
+    else
+        echo "User not found"
+    fi
+}
+
+add_user_to_group() {
+    echo "Enter the username to add to group"
+    read username
+    echo "Enter the group name"
+    read group_name
+    if id "$username" &>/dev/null; then
+        if grep -q "$group_name" /etc/group; then
+            usermod -aG "$group_name" "$username"
+            echo "User added to group"
+        else
+            echo "Group not found"
+        fi
+    else
+        echo "User not found"
+    fi
+}
+
+# # list all users
+# list_all_users() {
+#     cut -d: -f1 /etc/passwd
+# }
+
+while true; do
+    user_menu
+    read -p "Enter your choice" choice
+    case $choice in
+    1)
+        add_user
+        ;;
+    2)
+        delete_user
+        ;;
+    3)
+        modify_user_details
+        ;;
+    4)
+        add_user_to_group
+        ;;
+    5)
+        display_user_details
+        ;;
+    6)
+        break
+        ;;
+    *)
+        echo "Invalid choice"
+        ;;
+    esac
+done
