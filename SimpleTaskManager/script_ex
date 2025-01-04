@@ -1,0 +1,105 @@
+#! /bin/bash
+
+
+create_file() {
+    if [ -f 'tasks.txt' ]; then
+        echo "File exists"
+        echo ''
+    else
+        touch tasks.txt
+        echo "File created"
+        echo ''
+    fi
+}
+
+
+display_menu() {
+    echo "1. Add task"
+    echo "2. View all tasks"
+    echo "3. Mark task as completed"
+    echo "4. Delete task"
+    echo "5. Exit"
+    echo ''
+}
+
+# add task with status Pending
+add_task() {
+    read -p "Enter task: " task
+    if grep -q "$task:Pending" tasks.txt; then
+        echo "Task already exists"
+        echo ''
+        return
+    elif grep -q "$task:Completed" tasks.txt; then
+        echo "Task already exists"
+        echo ''
+        return
+    fi
+    echo "$task:Pending" >> tasks.txt
+    echo "Task added"
+    echo ''
+}
+
+# view all tasks
+view_tasks() {
+    cat tasks.txt
+    echo ''
+}
+
+# mark task as completed
+mark_task() {
+    read -p "Enter task to mark as completed: " task
+    echo ''
+    if grep -q "$task:Pending" tasks.txt; then
+        sed -i '' "s/$task:Pending/$task:Completed/g" tasks.txt
+        echo "Task marked as completed"
+        echo ''
+    else
+        echo "Task not found or already completed"
+        echo ''
+    fi
+}
+
+
+# delete task
+delete_task() {
+    read -p "Enter task to delete: " task
+    echo ''
+    if grep -q "$task:Pending" tasks.txt; then
+        sed -i '' "/$task:Pending/d" tasks.txt
+        echo "Task deleted"
+        echo ''
+    elif grep -q "$task:Completed" tasks.txt; then
+        sed -i '' "/$task:Completed/d" tasks.txt
+        echo "Task deleted"
+        echo ''
+    else
+        echo "Task not found"
+        echo ''
+    fi
+}
+user_input() {
+    read -p "Enter your choice: " choice
+    echo ''
+    case $choice in
+        1) add_task ;;
+        2) view_tasks ;;
+        3) mark_task ;;
+        4) delete_task ;;
+        5) echo "Exiting..." ;;
+        *) echo "Invalid choice"
+    esac
+
+    return $choice
+}
+
+create_file
+
+while true; do
+    display_menu
+    user_input
+
+    if [ $? -eq 5 ]; then
+        echo ''
+        break
+    fi
+done
