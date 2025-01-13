@@ -10,7 +10,7 @@ search_file() {
     echo "Enter filename to search"
     read filename
     if [ -f $filename ]; then
-        echo "File found"
+        echo "File found: $filename"
     else
         echo "File not found"
     fi
