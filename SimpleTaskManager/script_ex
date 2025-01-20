@@ -1,6 +1,12 @@
 #! /bin/bash
 
 
+# Get machine OS
+
+os=$(uname)
+echo $os
+
+
 create_file() {
     if [ -f 'tasks.txt' ]; then
         echo "File exists"
@@ -50,7 +56,11 @@ mark_task() {
     read -p "Enter task to mark as completed: " task
     echo ''
     if grep -q "$task:Pending" tasks.txt; then
-        sed -i '' "s/$task:Pending/$task:Completed/g" tasks.txt
+        if [ "$os" == "Linux" ]; then
+            sed -i "s/$task:Pending/$task:Completed/g" tasks.txt
+        elif [ "$os" == "Darwin" ]; then
+            sed -i '' -e "s/$task:Pending/$task:Completed/g" tasks.txt
+        fi
         echo "Task marked as completed"
         echo ''
     else
@@ -65,11 +75,19 @@ delete_task() {
     read -p "Enter task to delete: " task
     echo ''
     if grep -q "$task:Pending" tasks.txt; then
-        sed -i '' "/$task:Pending/d" tasks.txt
+        if [ $os == "Linux" ]; then
+            sed -i "/$task:Pending/d" tasks.txt
+        elif [ $os == "Darwin" ]; then
+            sed -i '' -e "/$task:Pending/d" tasks.txt
+        fi
         echo "Task deleted"
         echo ''
     elif grep -q "$task:Completed" tasks.txt; then
-        sed -i '' "/$task:Completed/d" tasks.txt
+        if [ $os == "Linux" ]; then
+            sed -i "/$task:Completed/d" tasks.txt
+        elif [ $os == "Darwin" ]; then
+            sed -i '' -e "/$task:Completed/d" tasks.txt
+        fi
         echo "Task deleted"
         echo ''
     else
